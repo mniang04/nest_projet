@@ -10,23 +10,27 @@ import { UserService } from './user.service';
 export class UserController {
     constructor(private userServise: UserService) {}
 
-    @ApiOkResponse({ type: User, isArray: true })
+    // Get all elements
+    @ApiOkResponse({ type: User, isArray: true })  
     @ApiQuery({ name: 'name' , required: false })
     @Get()
     getUsers(@Query('name') name?: string): User[] {
         return this.userServise.findALL(name );
     }
 
+    // Get element by id 
     @ApiNotFoundResponse({ type: User, description: 'The User' })
     @Get(':id')
     getUserById(@Param('id') id: string): User {
         const user = this.userServise.findById(Number(id));
+
         if (!user) {
             throw new NotFoundException
         }
         return user
     }
-
+    
+    // Post element
     @ApiCreatedResponse({ type: User })
     @Post()
      createUser(@Body() body: CreateUserDTO): User {
